@@ -1,0 +1,20 @@
+name: SleepLite
+main: com.chromaclypse.sleeplite.SleepLite
+version: ${project.version}
+description: Skip the night
+author: ezeiger92
+api-version: 1.13
+depend: [ChromaLib]
+commands:
+  sleeplite:
+    description: Root SleepLite command
+    usage: /<command> reload
+    permission: sleeplite.reload
+    aliases: [sl]
+permissions:
+  sleeplite.reload:
+    description: Reload perm
+    default: op
+  sleeplite.ignore:
+    description: Ignored when checking for night skips
+    default: false
