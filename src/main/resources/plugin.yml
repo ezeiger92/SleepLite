@@ -11,6 +11,11 @@ commands:
     usage: /<command> reload
     permission: sleeplite.reload
     aliases: [sl]
+  sleep:
+    description: Reprompt the sleep message
+    usage: /<command>
+    permission: sleeplite.nag
+    aliases: []
 permissions:
   sleeplite.reload:
     description: Reload perm
@@ -18,3 +23,6 @@ permissions:
   sleeplite.ignore:
     description: Ignored when checking for night skips
     default: false
+  sleeplite.nag:
+    description: Nag perm
+    default: op

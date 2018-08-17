@@ -10,10 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.chromaclypse.api.menu.Menu;
+import com.chromaclypse.api.messages.Text;
 
 public class SleepLite extends JavaPlugin implements Listener {
 	private SleepConfig config = new SleepConfig();
@@ -37,77 +39,46 @@ public class SleepLite extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		
 		getCommand("sleeplite").setExecutor(this);
+		getCommand("sleep").setExecutor(this);
 	}
 	
-	/*public final static class EntitydataApplier implements BiConsumer<Class<? extends LivingEntity>, Map<String, String>> {
-		private final Class<? extends LivingEntity> clazz;
-		private final Consumer<Map<String, String>> callback;
-		
-		public EntitydataApplier(Class<? extends LivingEntity> entityInterface, Consumer<Map<String, String>> applier) {
-			clazz = entityInterface;
-			callback = applier;
-		}
-
-		@Override
-		public void accept(Class<? extends LivingEntity> entityClass, Map<String, String> properties) {
-			if(isApplicable(entityClass))
-				callback.accept(properties);
-		}
-		
-		public boolean isApplicable(Class<? extends LivingEntity> entityClass) {
-			return clazz.isAssignableFrom(entityClass);
-		}
-		
-		public Consumer<Map<String, String>> getCallback() {
-			return callback;
-		}
+	@Override
+	public void onDisable() {
+		instance = null;
 	}
-	
-	public final static class TypedResolver {
-		private final List<Consumer<Map<String, String>>> callbacks = new ArrayList<>();
-		
-		private TypedResolver(List<EntitydataApplier> from) {
-			for(EntitydataApplier applier : from)
-				callbacks.add(applier.callback);
-		}
-		
-		public ItemStack process() {
-			return null;	
-		}
-	}
-	
-	
-	public final static class SkullResolver {
-		private final List<EntitydataApplier> appliers = new ArrayList<>();
-		
-		@SuppressWarnings("unchecked")
-		public TypedResolver subResolverFor(EntityType type) {
-			List<EntitydataApplier> subAppliers = new ArrayList<>();
-			Class<?> entityClass = type.getEntityClass();
-			Class<? extends LivingEntity> livingClass;
-			
-			if(LivingEntity.class.isAssignableFrom(entityClass))
-				livingClass = (Class<? extends LivingEntity>)entityClass;
-			else
-				throw new IllegalArgumentException("Entity type is not a LivingEntity");
-			
-			subAppliers.add(new EntitydataApplier(LivingEntity.class, map -> map.put("type", type.name())));
-			
-			for(EntitydataApplier applier : appliers)
-				if(applier.isApplicable(livingClass))
-					subAppliers.add(applier);
-			
-			return new TypedResolver(subAppliers);
-		}
-	}*/
 	
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
 		data.put(event.getWorld().getName(), new WorldData(event.getWorld(), skipControl::checkSkip));
 	}
+	
+	@EventHandler
+	public void onWorldUnload(WorldUnloadEvent event) {
+		data.remove(event.getWorld().getName());
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if(command.getName() == "sleep") {
+			if(sender instanceof Player) {
+				Player player = (Player) sender;
+				
+				if(player.isSleeping()) {
+					WorldData worldData = data.get(player.getWorld().getName());
+					
+					skipControl.checkSkip(worldData);
+				}
+				else {
+					player.sendMessage(Text.format().colorize("&cYou are not sleeping!"));
+				}
+			}
+			else {
+				sender.sendMessage(Text.format().colorize("&cYou are not a player!"));
+			}
+			
+			return true;
+		}
+		
 		if(args.length > 0) {
 			String arg1 = args[0].toLowerCase();
 			if(arg1.equals("reload")) {
