@@ -56,6 +56,10 @@ public class Control {
 		return needed;
 	}
 	
+	public static final boolean isNight(long time) {
+		return time >= 12541 && time <= 23458;
+	}
+	
 	public void checkSkip(WorldData data) {
 		//Log.info("calling checkSkip");
 		World world = data.getWorld();
@@ -70,7 +74,7 @@ public class Control {
 		int needed = getNeeded(sleep, total, worldConfig);
 
 		String fancyName = worldConfig.customName.length() > 0 ? worldConfig.customName : worldName;
-		String condition = data.getWorld().isThundering() ? "storm" : "night";
+		String condition = isNight(world.getTime()) ? "night" : "storm";
 		String message;
 		
 		if(needed > 0) {
@@ -92,7 +96,7 @@ public class Control {
 					.replaceAll("%world%", fancyName);
 		}
 		
-		BaseComponent[] components = TextComponent.fromLegacyText(Text.colorize(message));
+		BaseComponent[] components = TextComponent.fromLegacyText(Text.format().colorize(message));
 		for(Player p : world.getPlayers())
 			p.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
 	}
