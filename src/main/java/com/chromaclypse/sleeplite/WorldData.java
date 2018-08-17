@@ -9,8 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -131,5 +137,40 @@ public class WorldData implements Listener {
 			return;
 		
 		exit(event.getPlayer().getName(), event.getPlayer().getSleepTicks());
+	}
+	
+	@EventHandler
+	public void onWorldChange(PlayerChangedWorldEvent event) {
+		if(event.getFrom() == world) {
+			
+		}
+		else if(event.getPlayer().getWorld() == world) {
+			
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerSpawn(PlayerRespawnEvent event) {
+		checkSkip.accept(this);
+	}
+	
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		checkSkip.accept(this);
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		checkSkip.accept(this);
+	}
+	
+	@EventHandler
+	public void onPlayerLeave(PlayerQuitEvent event) {
+		checkSkip.accept(this);
+	}
+	
+	@EventHandler
+	public void onPlayerKicked(PlayerKickEvent event) {
+		checkSkip.accept(this);
 	}
 }
