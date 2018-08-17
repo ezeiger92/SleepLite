@@ -62,7 +62,8 @@ public class WorldData implements Listener {
 	}
 	
 	public int getSleepers() {
-		return (deepSleep <= 0) ? 0 : lightSleep;
+		return deepSleep;
+		//return (deepSleep <= 0) ? 0 : lightSleep;
 	}
 	
 	public World getWorld() {
@@ -79,7 +80,7 @@ public class WorldData implements Listener {
 				if(insomniacs.remove(playerName) != null) {
 					++deepSleep;
 					//Log.info("  has data w\\ deep=" + deepSleep);
-					if(deepSleep == 1)
+					//if(deepSleep == 1)
 						checkSkip.accept(WorldData.this);
 				}
 				//else
@@ -94,8 +95,8 @@ public class WorldData implements Listener {
 		//Log.info("calling onEnterBed: " + playerName + " deep: " + deepSleep + " sleep: " + lightSleep);
 		
 		putInsomniac(playerName);
-		if(deepSleep > 0)
-			checkSkip.accept(this);
+		//if(deepSleep > 0)
+		//	checkSkip.accept(this);
 	}
 	
 	@EventHandler
