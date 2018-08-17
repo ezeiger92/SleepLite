@@ -13,7 +13,7 @@ public class SleepConfig extends ConfigObject {
 		public String skipping = "&3Skipping the %condition% in %world%, rise and shine!";
 	}
 	
-	public Map<String, SleepWorld> worlds = Defaults.Keys("default").Values(new SleepWorld());
+	public Map<String, SleepWorld> worlds = Defaults.keys("default").values(new SleepWorld());
 	public static class SleepWorld {
 		public boolean enabled = true;
 		public String customName = "";
