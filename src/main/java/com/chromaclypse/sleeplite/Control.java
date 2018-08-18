@@ -63,6 +63,13 @@ public class Control {
 	public void checkSkip(WorldData data) {
 		//Log.info("calling checkSkip");
 		World world = data.getWorld();
+
+		boolean isNight = isNight(world.getTime());
+
+		if(!isNight && !world.isThundering()) {
+			return;
+		}
+
 		String worldName = world.getName();
 		SleepWorld worldConfig = getWorldConfig(worldName);
 		if(worldConfig == null || !worldConfig.enabled)
