@@ -13,6 +13,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -143,10 +144,10 @@ public class WorldData implements Listener {
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event) {
 		if(event.getFrom() == world) {
-			
+			checkSkip.accept(this);
 		}
 		else if(event.getPlayer().getWorld() == world) {
-			
+			checkSkip.accept(this);
 		}
 	}
 	
@@ -172,6 +173,11 @@ public class WorldData implements Listener {
 	
 	@EventHandler
 	public void onPlayerKicked(PlayerKickEvent event) {
+		checkSkip.accept(this);
+	}
+
+	@EventHandler
+	public void onGamemode(PlayerGameModeChangeEvent event) {
 		checkSkip.accept(this);
 	}
 }

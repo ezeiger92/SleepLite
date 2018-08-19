@@ -4,6 +4,8 @@ import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 import com.chromaclypse.api.messages.Text;
 import com.chromaclypse.sleeplite.SleepConfig.SleepWorld;
 import com.chromaclypse.sleeplite.SleepConfig.SleepWorld.SleepIgnored;
@@ -14,6 +16,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class Control {
 	private SleepConfig config;
+	private HashMap<String, Integer> sleepNeeded = new HashMap<>();
 	
 	public Control(SleepConfig config) {
 		this.config = config;
@@ -59,8 +62,12 @@ public class Control {
 	public static final boolean isNight(long time) {
 		return time >= 12541 && time <= 23458;
 	}
-	
+
 	public void checkSkip(WorldData data) {
+		checkSkip(data, false);
+	}
+	
+	public void checkSkip(WorldData data, boolean ignoreLast) {
 		//Log.info("calling checkSkip");
 		World world = data.getWorld();
 
@@ -79,6 +86,14 @@ public class Control {
 		int total = countablePlayers(world);
 		//Log.info("Checking sleep: " + sleep + "/" + total);
 		int needed = getNeeded(sleep, total, worldConfig);
+
+		Integer oldNeeded = sleepNeeded.get(world.getName());
+
+		if(ignoreLast && oldNeeded != null && oldNeeded.intValue() == needed) {
+			return;
+		}
+
+		sleepNeeded.put(world.getName(), needed);
 
 		String fancyName = worldConfig.customName.length() > 0 ? worldConfig.customName : worldName;
 		String condition = isNight(world.getTime()) ? "night" : "storm";

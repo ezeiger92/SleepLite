@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,7 +40,7 @@ public class SleepLite extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(this, this);
 		
 		getCommand("sleeplite").setExecutor(this);
-		getCommand("sleep").setExecutor(this);
+		getCommand("sleep").setExecutor(new SleepNag());
 	}
 	
 	@Override
@@ -57,16 +58,17 @@ public class SleepLite extends JavaPlugin implements Listener {
 		data.remove(event.getWorld().getName());
 	}
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(command.getName() == "sleep") {
+	public class SleepNag implements CommandExecutor {
+
+		@Override
+		public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 			if(sender instanceof Player) {
 				Player player = (Player) sender;
 				
 				if(player.isSleeping()) {
 					WorldData worldData = data.get(player.getWorld().getName());
 					
-					skipControl.checkSkip(worldData);
+					skipControl.checkSkip(worldData, true);
 				}
 				else {
 					player.sendMessage(Text.format().colorize("&cYou are not sleeping!"));
@@ -78,7 +80,11 @@ public class SleepLite extends JavaPlugin implements Listener {
 			
 			return true;
 		}
-		
+
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(args.length > 0) {
 			String arg1 = args[0].toLowerCase();
 			if(arg1.equals("reload")) {
