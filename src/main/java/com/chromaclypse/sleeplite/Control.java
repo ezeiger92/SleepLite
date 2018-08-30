@@ -89,14 +89,14 @@ public class Control {
 
 		Integer oldNeeded = sleepNeeded.get(world.getName());
 
-		if(ignoreLast && oldNeeded != null && oldNeeded.intValue() == needed) {
+		if(!ignoreLast && oldNeeded != null && oldNeeded.intValue() == needed) {
 			return;
 		}
 
 		sleepNeeded.put(world.getName(), needed);
 
 		String fancyName = worldConfig.customName.length() > 0 ? worldConfig.customName : worldName;
-		String condition = isNight(world.getTime()) ? "night" : "storm";
+		String condition = isNight ? "night" : "storm";
 		String message;
 		
 		if(needed > 0) {
