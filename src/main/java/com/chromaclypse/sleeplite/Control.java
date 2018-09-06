@@ -56,7 +56,7 @@ public class Control {
 		int ratioPlayers = (int)Math.ceil(worldConfig.ratio * total);
 		int needed = Math.min(Math.max(ratioPlayers, minPlayers), worldConfig.maximum) - sleeping;
 		
-		return needed;
+		return Math.max(needed, 1);
 	}
 	
 	public static final boolean isNight(long time) {
