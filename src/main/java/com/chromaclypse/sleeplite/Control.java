@@ -93,13 +93,13 @@ public class Control {
 			return;
 		}
 
-		sleepNeeded.put(world.getName(), needed);
-
 		String fancyName = worldConfig.customName.length() > 0 ? worldConfig.customName : worldName;
 		String condition = isNight ? "night" : "storm";
 		String message;
 		
 		if(needed > 0) {
+			sleepNeeded.put(world.getName(), needed);
+
 			message = config.messages.notEnough
 					.replaceAll("%needed%", String.valueOf(needed))
 					.replaceAll("%s%", needed == 1 ? "" : "s")
@@ -107,8 +107,8 @@ public class Control {
 					.replaceAll("%world%", fancyName);
 		}
 		else {
+			sleepNeeded.remove(world.getName());
 			data.reset();
-			
 			world.setTime(0);
 			world.setThundering(false);
 			world.setStorm(false);
