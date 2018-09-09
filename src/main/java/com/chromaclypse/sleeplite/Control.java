@@ -53,10 +53,9 @@ public class Control {
 	public int getNeeded(int sleeping, int total, SleepWorld worldConfig) {
 		// Pick the largest of needed players to fit ratio and needed players for minimum
 		int minPlayers = Math.min(worldConfig.minimum, total);
-		int ratioPlayers = (int)Math.ceil(worldConfig.ratio * total);
-		int needed = Math.min(Math.max(ratioPlayers, minPlayers), worldConfig.maximum) - sleeping;
+		int ratioPlayers = Math.max((int)Math.ceil(worldConfig.ratio * total), 1);
 		
-		return Math.max(needed, 1);
+		return Math.min(Math.max(ratioPlayers, minPlayers), worldConfig.maximum) - sleeping;
 	}
 	
 	public static final boolean isNight(long time) {
@@ -87,10 +86,22 @@ public class Control {
 		//Log.info("Checking sleep: " + sleep + "/" + total);
 		int needed = getNeeded(sleep, total, worldConfig);
 
-		Integer oldNeeded = sleepNeeded.get(world.getName());
+		int oldNeeded;
+		{
+			Integer i = sleepNeeded.get(world.getName());
 
-		if(!ignoreLast && oldNeeded != null && oldNeeded.intValue() == needed) {
-			return;
+			if(i == null) {
+				oldNeeded = needed + 1;
+			}
+			else {
+				oldNeeded = i.intValue();
+			}
+		}
+
+		if(!ignoreLast) {
+			if(sleep == 0 || oldNeeded == needed) {
+				return;
+			}
 		}
 
 		String fancyName = worldConfig.customName.length() > 0 ? worldConfig.customName : worldName;
