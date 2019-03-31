@@ -102,7 +102,7 @@ public class WorldData implements Listener {
 	
 	@EventHandler
 	public void onEnterBed(PlayerBedEnterEvent event) {
-		if(event.getPlayer().getWorld() != world)
+		if(event.isCancelled() || event.getPlayer().getWorld() != world)
 			return;
 		
 		enter(event.getPlayer().getName());
