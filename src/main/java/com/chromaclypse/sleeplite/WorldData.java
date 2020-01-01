@@ -143,41 +143,42 @@ public class WorldData implements Listener {
 	
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event) {
-		if(event.getFrom() == world) {
-			checkSkip.accept(this);
+		if(event.getFrom() == world || event.getPlayer().getWorld() == world) {
+			delayCheck();
 		}
-		else if(event.getPlayer().getWorld() == world) {
-			checkSkip.accept(this);
-		}
+	}
+	
+	private void delayCheck() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(SleepLite.get(), () -> checkSkip.accept(this), 1);
 	}
 	
 	@EventHandler
 	public void onPlayerSpawn(PlayerRespawnEvent event) {
-		checkSkip.accept(this);
+		delayCheck();
 	}
 	
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		checkSkip.accept(this);
+		delayCheck();
 	}
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		checkSkip.accept(this);
+		delayCheck();
 	}
 	
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event) {
-		checkSkip.accept(this);
+		delayCheck();
 	}
 	
 	@EventHandler
 	public void onPlayerKicked(PlayerKickEvent event) {
-		checkSkip.accept(this);
+		delayCheck();
 	}
 
 	@EventHandler
 	public void onGamemode(PlayerGameModeChangeEvent event) {
-		checkSkip.accept(this);
+		delayCheck();
 	}
 }
