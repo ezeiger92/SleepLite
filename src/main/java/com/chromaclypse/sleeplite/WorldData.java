@@ -72,32 +72,20 @@ public class WorldData implements Listener {
 	}
 	
 	private void putInsomniac(String playerName) {
-		//Log.info("calling putInsomniac: " + playerName);
 		insomniacs.put(playerName, new BukkitRunnable() {
 			@Override
 			public void run() {
-				//Log.info("running delayed: " + playerName);
-				
 				if(insomniacs.remove(playerName) != null) {
 					++deepSleep;
-					//Log.info("  has data w\\ deep=" + deepSleep);
-					//if(deepSleep == 1)
-						checkSkip.accept(WorldData.this);
+					checkSkip.accept(WorldData.this);
 				}
-				//else
-				//	Log.info("  empty");
 			}
 		}.runTaskLater(SleepLite.get(), DEEP_TICKS));
 	}
 	
 	public void enter(String playerName) {
 		++lightSleep;
-
-		//Log.info("calling onEnterBed: " + playerName + " deep: " + deepSleep + " sleep: " + lightSleep);
-		
 		putInsomniac(playerName);
-		//if(deepSleep > 0)
-		//	checkSkip.accept(this);
 	}
 	
 	@EventHandler
@@ -109,7 +97,6 @@ public class WorldData implements Listener {
 	}
 	
 	public void reset() {
-		//Log.info("calling reset");
 		for(BukkitTask task : insomniacs.values())
 			task.cancel();
 		
@@ -130,7 +117,7 @@ public class WorldData implements Listener {
 		}
 		
 		if(old > 0)
-			checkSkip.accept(this);
+			delayCheck();
 	}
 	
 	@EventHandler
